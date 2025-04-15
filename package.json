@@ -12,13 +12,19 @@
     "start": "node ./src/index.js",
     "install:ci": "npm ci"
   },
-  "keywords": ["workers", "records", "management"],
+  "keywords": [
+    "workers",
+    "records",
+    "management"
+  ],
   "author": "Your Name",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "fs": "^0.0.1-security",
-    "path": "^0.12.7"
+    "mysql2": "^3.14.0",
+    "path": "^0.12.7",
+    "sequelize": "^6.37.7"
   }
 }

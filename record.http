@@ -1,0 +1,30 @@
+### GET todos los registros
+GET http://localhost:3000/records/
+Content-Type: application/json
+
+### GET un registro por ID
+GET http://localhost:3000/records/2
+Content-Type: application/json
+
+### POST crear un nuevo registro
+POST http://localhost:3000/records/
+Content-Type: application/json
+
+{
+  "persona_id": "800b7722-19ff-11f0-9c20-643150603666",
+  "tipo": "ingreso",
+  "fecha_hora": "2025-04-15T10:00:00"
+}
+
+### PUT actualizar un registro por ID
+PUT http://localhost:3000/records/2
+Content-Type: application/json
+
+{
+  "tipo": "egreso",
+  "fecha_hora": "2025-04-15T12:00:00"
+}
+
+### DELETE eliminar un registro por ID
+DELETE http://localhost:3000/records/4
+Content-Type: application/json

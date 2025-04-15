@@ -1,33 +1,58 @@
-// Obtener todos los registros
-export const getAllRecords = (req, res) => {
-  res.send('Obtener todos los registros')
+import RegistroHorario from '../models/RegistroHorario.js';
+import Persona from '../models/Persona.js';
+
+export const createRecord = async (req, res) => {
+  try {
+    const { persona_id, tipo, fecha_hora } = req.body;
+
+    // Verificar si la persona existe
+    const persona = await Persona.findByPk(persona_id);
+    if (!persona) {
+      return res.status(404).json({ error: 'La persona no existe' });
+    }
+
+    // Crear el registro de horario
+    const nuevoRegistro = await RegistroHorario.create({ persona_id, tipo, fecha_hora });
+    res.status(201).json(nuevoRegistro);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const getAllRecords = async (req, res) => {
+  try {
+    // Obtener todos los registros de horario, incluyendo la información de la persona asociada
+    const registros = await RegistroHorario.findAll({
+      include: {
+        model: Persona,
+        as: 'persona', // Asegúrate de que la relación esté configurada correctamente en el modelo
+      },
+    })
+    res.status(200).json(registros)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
 }
 
-// Obtener uno por ID
-export const getRecordById = (req, res) => {
-  const { id } = req.params
-  res.send(`Obtener el registro con ID: ${id}`)
-}
 
-// Crear nuevo registro
-export const createRecord = (req, res) => {
-  const nuevoRegistro = req.body
-  res.send(`Nuevo registro creado: ${JSON.stringify(nuevoRegistro)}`)
-}
+export const getRecordById = async (req, res) => {
+  try {
+    const { id } = req.params
 
-// Actualizar registro
-export const updateRecord = (req, res) => {
-  const { id } = req.params
-  const datosActualizados = req.body
-  res.send(
-    `Actualizar el registro ${id} con datos: ${JSON.stringify(
-      datosActualizados
-    )}`
-  )
-}
+    // Buscar el registro por ID
+    const registro = await RegistroHorario.findByPk(id, {
+      include: {
+        model: Persona,
+        as: 'persona', // Asegúrate de que la relación esté configurada correctamente en el modelo
+      },
+    })
 
-// Eliminar registro
-export const deleteRecord = (req, res) => {
-  const { id } = req.params
-  res.send(`Registro con ID ${id} eliminado`)
+    if (!registro) {
+      return res.status(404).json({ error: 'Registro no encontrado' })
+    }
+
+    res.status(200).json(registro)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
 }

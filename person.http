@@ -1,0 +1,48 @@
+### GET todas las personas
+GET http://localhost:3000/personRouter
+Content-Type: application/json
+
+### GET una persona por ID
+GET http://localhost:3000/personas/1
+Content-Type: application/json
+
+### POST crear una nueva persona
+POST http://localhost:3000/personRouter/
+Content-Type: application/json
+
+{
+  "id": "123e4567-e89b-12d3-a456-426614174000",
+  "nombre": "Juan",
+  "apellido": "Pérez",
+  "dni": "12345678",
+  "email": "juan.perez@example.com",
+  "celular": "123456789",
+  "fecha_nac": "1990-01-01",
+  "direccion": "Calle Falsa 123",
+  "legajo": "LEG123",
+  "cargo_id": "800b7722-19ff-11f0-9c20-643150603666"
+}
+
+### GET personas por nombre
+GET http://localhost:3000/personas/nombre/Juan
+Content-Type: application/json
+
+### GET personas por apellido
+GET http://localhost:3000/personas/apellido/Pérez
+Content-Type: application/json
+
+### GET personas por edad
+GET http://localhost:3000/personas/edad/30
+Content-Type: application/json
+
+### GET personas por fecha de nacimiento
+GET http://localhost:3000/personas/fecha-nacimiento/1990-01-01
+Content-Type: application/json
+
+### GET personas por DNI
+GET http://localhost:3000/personas/dni/12345678
+Content-Type: application/json
+
+### GET personas por email
+GET http://localhost:3000/personas/email/juan.perez@example.com
+Content-Type: application/json
