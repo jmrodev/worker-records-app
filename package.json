@@ -1,0 +1,24 @@
+{
+  "name": "worker-records-app",
+  "version": "1.0.0",
+  "description": "An application to manage worker records.",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "worker-records-app": "./src/index.js"
+  },
+  "scripts": {
+    "dev": "node --watch ./src/index.js",
+    "start": "node ./src/index.js",
+    "install:ci": "npm ci"
+  },
+  "keywords": ["workers", "records", "management"],
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7"
+  }
+}

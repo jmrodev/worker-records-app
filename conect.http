@@ -1,0 +1,26 @@
+### GET todos los registros (simulado)
+GET http://localhost:3000/recordRouter/
+
+### GET un registro por ID
+GET http://localhost:3000/recordRouter/2
+
+### POST crear un nuevo registro
+POST http://localhost:3000/recordRouter/
+Content-Type: application/json
+
+{
+  "nombre": "Juan",
+  "email": "juan@example.com"
+}
+
+### PUT actualizar un registro por ID
+PUT http://localhost:3000/recordRouter/2
+Content-Type: application/json
+
+{
+  "nombre": "Juan Pérez",
+  "email": "juanperez@example.com"
+}
+
+### DELETE eliminar un registro por ID
+DELETE http://localhost:3000/recordRouter/4
