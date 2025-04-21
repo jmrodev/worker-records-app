@@ -5,6 +5,7 @@ import express from 'express'
 
 const router = express.Router()
 
+
 const routersDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)))
 console.log(`Directorio de routers: ${routersDir}`);
 

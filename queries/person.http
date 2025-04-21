@@ -14,7 +14,7 @@ Content-Type: application/json
   "id": "123e4567-e89b-12d3-a456-426614174000",
   "nombre": "Juan",
   "apellido": "Pérez",
-  "dni": "12345678",
+  "dni": "12345679",
   "email": "juan.perez@example.com",
   "celular": "123456789",
   "fecha_nac": "1990-01-01",
