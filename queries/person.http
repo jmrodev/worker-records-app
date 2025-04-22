@@ -20,7 +20,7 @@ Content-Type: application/json
   "fecha_nac": "1990-01-01",
   "direccion": "Calle Falsa 123",
   "legajo": "LEG123",
-  "cargo_id": "800b7722-19ff-11f0-9c20-643150603666"
+  "cargo_id": "20"
 }
 
 ### GET personas por nombre

@@ -7,7 +7,7 @@ POST http://localhost:3000/cargoRouter/
 Content-Type: application/json
 
 {
-    "id": 50,
+    "id": 51,
     "nombre": "Test Cargo",
     "tipo": "This is a test cargo"
 }

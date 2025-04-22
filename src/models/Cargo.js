@@ -3,7 +3,7 @@ import sequelize from '../config/database.js';
 
 const Cargo = sequelize.define('Cargo', {
   id: {
-    type: DataTypes.NUMBER(3),
+    type: DataTypes.INTEGER,
     primaryKey: true,
   },
   nombre: {

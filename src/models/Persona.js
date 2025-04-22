@@ -4,7 +4,8 @@ import Cargo from './Cargo.js';
 
 const Persona = sequelize.define('Persona', {
   id: {
-    type: DataTypes.CHAR(36),
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
   nombre: {
