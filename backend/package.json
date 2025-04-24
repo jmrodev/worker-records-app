@@ -1,5 +1,5 @@
 {
-  "name": "worker-records-app",
+  "name": "backendq",
   "version": "1.0.0",
   "description": "An application to manage worker records.",
   "main": "index.js",
@@ -17,7 +17,7 @@
     "records",
     "management"
   ],
-  "author": "Your Name",
+  "author": "Juan Marcelo Rodriguez",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
