@@ -1,0 +1,32 @@
+{
+  "name": "backendq",
+  "version": "1.0.0",
+  "description": "An application to manage worker records.",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "worker-records-app": "./src/index.js"
+  },
+  "scripts": {
+    "dev": "node --watch ./src/index.js",
+    "start": "node ./src/index.js",
+    "install:ci": "npm ci"
+  },
+  "keywords": [
+    "workers",
+    "records",
+    "management"
+  ],
+  "author": "Juan Marcelo Rodriguez",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "fs": "^0.0.1-security",
+    "mysql2": "^3.14.0",
+    "path": "^0.12.7",
+    "sequelize": "^6.37.7",
+    "uuid": "^11.1.0"
+  }
+}
