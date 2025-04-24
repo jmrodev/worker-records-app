@@ -3,7 +3,7 @@ GET http://localhost:3000/personRouter
 Content-Type: application/json
 
 ### GET una persona por ID
-GET http://localhost:3000/personas/1
+GET http://localhost:3000/personRouter/cf4f1686-2a96-4730-8fae-6be3e524420f
 Content-Type: application/json
 
 ### POST crear una nueva persona
@@ -11,10 +11,9 @@ POST http://localhost:3000/personRouter/
 Content-Type: application/json
 
 {
-  "id": "123e4567-e89b-12d3-a456-426614174000",
   "nombre": "Juan",
   "apellido": "Pérez",
-  "dni": "12345679",
+  "dni": "123456790",
   "email": "juan.perez@example.com",
   "celular": "123456789",
   "fecha_nac": "1990-01-01",
