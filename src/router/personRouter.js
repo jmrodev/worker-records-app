@@ -12,6 +12,7 @@ import {
   getPersonsByCargo,
   getPersonsByCargoType,
   getPersonsByCargoAndType,
+  deletePerson
 } from '../controllers/personController.js'
 
 const router = express.Router()
@@ -26,14 +27,9 @@ router.get('/edad/:edad', getPersonByAge)
 router.get('/fecha-nacimiento/:fecha_nac', getPersonByBirthdate)
 router.get('/dni/:dni', getPersonByDni)
 router.get('/email/:email', getPersonByEmail)
-
-// Filtrar por cargo
 router.get('/cargo/:cargo_id', getPersonsByCargo)
-
-// Filtrar por tipo de cargo
 router.get('/tipo/:tipo', getPersonsByCargoType)
-
-// Filtrar por cargo y tipo
 router.get('/cargo/:cargo_id/tipo/:tipo', getPersonsByCargoAndType)
+router.delete('/:id', deletePerson)
 
 export default router

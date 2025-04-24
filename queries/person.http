@@ -13,12 +13,12 @@ Content-Type: application/json
 {
   "nombre": "Juan",
   "apellido": "Pérez",
-  "dni": "98765482", 
+  "dni": "98755482", 
   "email": "juan.perez@example.com",
   "celular": "123456789",
   "fecha_nac": "1990-01-01",
   "direccion": "Calle Falsa 123",
-  "legajo": "LEG1ñ4",
+  "legajo": "LEG1ñ44",
   "cargo_id": "52"
 }
 
@@ -51,9 +51,9 @@ GET http://localhost:3000/personRouter/cargo/20
 Content-Type: application/json
 
 ### GET personas por tipo de cargo
-GET http://localhost:3000/personRouter/tipo/Test_Cargo
+GET http://localhost:3000/personRouter/tipo/Test
 Content-Type: application/json
 
 ### GET personas por cargo y tipo
-GET http://localhost:3000/personRouter/cargo/20/tipo/Test
+GET http://localhost:3000/personRouter/cargo/52/tipo/Test
 Content-Type: application/json
