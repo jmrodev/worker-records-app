@@ -13,35 +13,47 @@ Content-Type: application/json
 {
   "nombre": "Juan",
   "apellido": "Pérez",
-  "dni": "123456790",
+  "dni": "98765482", 
   "email": "juan.perez@example.com",
   "celular": "123456789",
   "fecha_nac": "1990-01-01",
   "direccion": "Calle Falsa 123",
-  "legajo": "LEG123",
-  "cargo_id": "20"
+  "legajo": "LEG1ñ4",
+  "cargo_id": "52"
 }
 
 ### GET personas por nombre
-GET http://localhost:3000/personas/nombre/Juan
+GET http://localhost:3000/personRouter/nombre/Juan
 Content-Type: application/json
 
 ### GET personas por apellido
-GET http://localhost:3000/personas/apellido/Pérez
+GET http://localhost:3000/personRouter/apellido/Pérez
 Content-Type: application/json
 
 ### GET personas por edad
-GET http://localhost:3000/personas/edad/30
+GET http://localhost:3000/personRouter/edad/35
 Content-Type: application/json
 
 ### GET personas por fecha de nacimiento
-GET http://localhost:3000/personas/fecha-nacimiento/1990-01-01
+GET http://localhost:3000/personRouter/fecha-nacimiento/1990-01-01
 Content-Type: application/json
 
 ### GET personas por DNI
-GET http://localhost:3000/personas/dni/12345678
+GET http://localhost:3000/personRouter/dni/12345679
 Content-Type: application/json
 
 ### GET personas por email
-GET http://localhost:3000/personas/email/juan.perez@example.com
+GET http://localhost:3000/personRouter/email/juan.perez@example.com
+Content-Type: application/json
+
+### GET personas por cargo
+GET http://localhost:3000/personRouter/cargo/20
+Content-Type: application/json
+
+### GET personas por tipo de cargo
+GET http://localhost:3000/personRouter/tipo/Test_Cargo
+Content-Type: application/json
+
+### GET personas por cargo y tipo
+GET http://localhost:3000/personRouter/cargo/20/tipo/Test
 Content-Type: application/json
