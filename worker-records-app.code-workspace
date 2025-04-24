@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "worker-records-app"
+		},
+		{
+			"path": "worker-record-frontend"
+		}
+	],
+	"settings": {}
+}
