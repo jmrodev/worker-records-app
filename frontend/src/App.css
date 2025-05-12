@@ -1,16 +1,39 @@
 #root {
-  max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
 }
 
 
-.App{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.App {
+  display: grid;
+  grid-template-columns: 1fr 7fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: 
+  "header header" 
+  "sidebar content"
+  "footer footer" ;
+  grid-template-rows: auto 1fr;
+  gap: 1rem;
   min-height: 100vh;
-  background-color: #97ad7d;
+}
+
+.App-header {
+  grid-area: header;
+  background-color: #dba8a8;
+}
+
+.App-sidebar {
+  grid-area: sidebar;
+  background-color: #93d4a9;
+}
+
+.App-content {
+  grid-area: content;
+  background-color: #ac93dd;
+}
+
+.App-footer {
+  grid-area: footer;
+  background-color: #c99981;
 }

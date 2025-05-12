@@ -13,7 +13,10 @@ const Home = () => {
           <form>
             <Input type="number" placeholder="Legajo" />
             <Input type="number" placeholder="Clave" />
-            <Button text="Enviar" />
+            <Button
+             text="Enviar"
+             onClick={() => alert('Button clicked')}
+            />
           </form>
         </div>
       </div>

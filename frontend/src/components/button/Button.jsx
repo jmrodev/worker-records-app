@@ -9,10 +9,9 @@ const Button = (
             }
             disabled={disabled}
             className={`btn ${className}`}
-
         >
             {text}
-            
+
         </button>
     )
 }
