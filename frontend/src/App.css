@@ -20,20 +20,34 @@
 
 .App-header {
   grid-area: header;
-  background-color: #dba8a8;
 }
 
 .App-sidebar {
   grid-area: sidebar;
-  background-color: #93d4a9;
 }
 
 .App-content {
-  grid-area: content;
-  background-color: #ac93dd;
+  grid-area: content; 
 }
 
 .App-footer {
   grid-area: footer;
-  background-color: #c99981;
+}
+
+.routes{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 1rem;
+  background-color: #f0f0f0;
+}
+
+.route {
+  margin: 1rem;
+  padding: 1rem;
+  background-color: #be3c3c;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }

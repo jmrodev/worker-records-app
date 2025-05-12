@@ -1,3 +1,4 @@
+import "./Button.css"
 const Button = (
     { text, onClick, type = "button", disabled = false, className = "" } = {} // Destructuring props with default values
 ) => {

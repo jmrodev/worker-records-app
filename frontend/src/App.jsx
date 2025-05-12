@@ -9,14 +9,15 @@ import Header from './components/header/Header.jsx'
 function App() {
   return (
     <Router>
+
       <div className="App">
         <Header />
         <Aside />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
+        <Routes className="routes">
+          <Route className="route" path="/" element={<Home />} />
+          <Route className="route" path="/about" element={<About />} />
         </Routes>
-        <Footer /> 
+        <Footer />
       </div>
     </Router>
   )
