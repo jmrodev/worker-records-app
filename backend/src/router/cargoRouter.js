@@ -1,15 +1,21 @@
-import express from 'express'
-
+import express from 'express';
 import {
-    createCargo,
-    getAllCargos
-} from '../controllers/cargoController.js'
+    createCargo, getAllCargos, getCargoById, updateCargo, deleteCargo
+} from '../controllers/cargoController.js';
+import { authenticate, authorize } from '../middleware/authMiddleware.js';
+import { 
+    createCargoValidation, updateCargoValidation, cargoIdParamValidation, cargoQueryValidation
+} from '../validators/cargoValidators.js';
 
-const router = express.Router()
+const router = express.Router();
 
-// Rutas RESTful
-router.get('/', getAllCargos)
-router.post('/', createCargo)
+router.use(authenticate); 
+router.use(authorize(['admin', 'supervisor'])); // Solo admin y supervisor pueden gestionar cargos
 
-export default router
+router.post('/', createCargoValidation, createCargo);
+router.get('/', cargoQueryValidation, getAllCargos);
+router.get('/:id', cargoIdParamValidation, getCargoById);
+router.put('/:id', updateCargoValidation, updateCargo);
+router.delete('/:id', cargoIdParamValidation, deleteCargo);
 
+export default router;

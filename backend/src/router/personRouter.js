@@ -1,35 +1,32 @@
-import express from 'express'
+import express from 'express';
 import {
-  createPerson,
-  getAllPersons,
-  getPersonById,
-  getPersonByAge,
-  getPersonByBirthdate,
-  getPersonByDni,
-  getPersonByEmail,
-  getPersonByName,
-  getPersonByLastName,
-  getPersonsByCargo,
-  getPersonsByCargoType,
-  getPersonsByCargoAndType,
-  deletePerson
-} from '../controllers/personController.js'
+  createPerson, getAllPersons, getPersonById, updatePerson, deletePerson,
+  getPersonByDni, getPersonByName, getPersonByLastName, getPersonByBirthdate, getPersonByAge, getPersonByEmail
+} from '../controllers/personController.js';
+import { authenticate, authorize } from '../middleware/authMiddleware.js';
+import {
+  createPersonValidation, updatePersonValidation, personIdParamValidation, personQueryValidation
+} from '../validators/personValidators.js';
+import { param } from 'express-validator';
 
-const router = express.Router()
+const router = express.Router();
 
-// Rutas RESTful
-router.get('/', getAllPersons)
-router.get('/:id', getPersonById)
-router.post('/', createPerson)
-router.get('/nombre/:nombre', getPersonByName)
-router.get('/apellido/:apellido', getPersonByLastName)
-router.get('/edad/:edad', getPersonByAge)
-router.get('/fecha-nacimiento/:fecha_nac', getPersonByBirthdate)
-router.get('/dni/:dni', getPersonByDni)
-router.get('/email/:email', getPersonByEmail)
-router.get('/cargo/:cargo_id', getPersonsByCargo)
-router.get('/tipo/:tipo', getPersonsByCargoType)
-router.get('/cargo/:cargo_id/tipo/:tipo', getPersonsByCargoAndType)
-router.delete('/:id', deletePerson)
+// Aplicar autenticación a todas las rutas de personas
+router.use(authenticate); 
 
-export default router
+router.post('/', authorize(['admin', 'supervisor']), createPersonValidation, createPerson);
+router.get('/', personQueryValidation, getAllPersons); // Todos los autenticados pueden ver
+
+router.get('/:id', personIdParamValidation, getPersonById); // Todos los autenticados pueden ver por ID
+router.put('/:id', authorize(['admin', 'supervisor']), updatePersonValidation, updatePerson);
+router.delete('/:id', authorize(['admin']), personIdParamValidation, deletePerson);
+
+// Rutas de búsqueda específicas (considerar si son necesarias o si se usa getAllPersons con filtros)
+router.get('/dni/:dni', [param('dni').notEmpty().isString()], getPersonByDni);
+router.get('/nombre/:nombre', [param('nombre').notEmpty().isString()], getPersonByName);
+router.get('/apellido/:apellido', [param('apellido').notEmpty().isString()], getPersonByLastName);
+router.get('/edad/:edad', [param('edad').isInt({ min:0 })], getPersonByAge);
+router.get('/fecha-nacimiento/:fecha_nac', [param('fecha_nac').isISO8601().toDate()], getPersonByBirthdate);
+router.get('/email/:email', [param('email').isEmail()], getPersonByEmail);
+
+export default router;

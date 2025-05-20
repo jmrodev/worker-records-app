@@ -1,287 +1,132 @@
-import Persona from '../models/Persona.js'
-import Cargo from '../models/Cargo.js'
-import sequelize, { Op } from 'sequelize'
-import { validationResult } from 'express-validator'
+import { Op, literal, fn, col, where as sequelizeWhere } from 'sequelize';
+import Persona from '../models/Persona.js';
+import Cargo from '../models/Cargo.js';
+import {
+  sendSuccess,
+  sendNotFound,
+  sendCreated,
+  sendNoContent,
+  sendPaginated,
+} from '../utils/responseHandler.js';
+import { validationResult } from 'express-validator';
 
-export const createPerson = async (req, res) => {
-  const errors = validationResult(req)
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() })
-  }
-
-  const { dni, cargo_id } = req.body
-
+export const createPerson = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return next(errors);
   try {
-    const personaExistente = await Persona.findOne({ where: { dni } })
-    const cargoExistente = await Cargo.findByPk(cargo_id)
-
-    if (!cargoExistente) {
-      return res.status(400).json({ error: 'El cargo no existe' })
-    }
-
-    if (personaExistente) {
-      return res.status(400).json({ error: 'La persona ya existe' })
-    }
-
-    const nuevaPersona = await Persona.create(req.body)
-
-    if (!nuevaPersona) {
-      return res.status(400).json({ error: 'Error al crear la persona' })
-    }
-
+    const nuevaPersona = await Persona.create(req.body);
     const personaConCargo = await Persona.findByPk(nuevaPersona.id, {
-      include: [{ model: Cargo, as: 'cargo' }],
-    })
-    res.status(201).json(personaConCargo)
+      include: [{ model: Cargo, as: 'cargo' }]
+    });
+    return sendCreated(res, personaConCargo);
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    next(error);
   }
-}
+};
 
-export const getAllPersons = async (req, res) => {
+export const getAllPersons = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return next(errors);
   try {
-    const { page = 1, limit = 10 } = req.query
-    const offset = (page - 1) * limit
+    const { page = 1, limit = 10, nombre, apellido, dni, email, cargo_id, tipo_cargo, sort = 'apellido', order = 'ASC' } = req.query;
+    const offset = (parseInt(page, 10) - 1) * parseInt(limit, 10);
+    const whereClause = {};
+    const includeCargoWhere = {};
 
-    const personas = await Persona.findAndCountAll({
-      include: [{ model: Cargo, as: 'cargo' }],
-      order: [['apellido', 'ASC']],
-      limit: parseInt(limit),
-      offset: parseInt(offset),
-    })
+    if (nombre) whereClause.nombre = { [Op.like]: `%${nombre}%` };
+    if (apellido) whereClause.apellido = { [Op.like]: `%${apellido}%` };
+    if (dni) whereClause.dni = { [Op.like]: `%${dni}%` };
+    if (email) whereClause.email = { [Op.like]: `%${email}%` }; // Búsqueda exacta o like según se prefiera
+    if (cargo_id) whereClause.cargo_id = cargo_id;
+    if (tipo_cargo) includeCargoWhere.tipo = { [Op.like]: `%${tipo_cargo}%`};
 
-    res.status(200).json({
-      total: personas.count,
-      pages: Math.ceil(personas.count / limit),
-      data: personas.rows,
-    })
+    const { count, rows } = await Persona.findAndCountAll({
+      where: whereClause,
+      include: [{ model: Cargo, as: 'cargo', ...(Object.keys(includeCargoWhere).length && { where: includeCargoWhere }) }],
+      order: [[sort, order.toUpperCase()]],
+      limit: parseInt(limit, 10),
+      offset: offset,
+      distinct: true,
+    });
+    return sendPaginated(res, rows, count, page, limit, 'personas');
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    next(error);
   }
-}
+};
 
-export const getPersonById = async (req, res) => {
+export const getPersonById = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return next(errors);
   try {
-    const { id } = req.params
+    const { id } = req.params;
     const persona = await Persona.findByPk(id, {
-      include: [{ model: Cargo, as: 'cargo' }],
-    })
-    if (!persona) {
-      return res.status(404).json({ error: 'Persona no encontrada' })
-    }
-    res.status(200).json(persona)
+      include: [{ model: Cargo, as: 'cargo' }]
+    });
+    if (!persona) return sendNotFound(res, 'Persona no encontrada.');
+    return sendSuccess(res, persona);
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    next(error);
   }
-}
+};
 
-export const updatePerson = async (req, res) => {
+export const updatePerson = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return next(errors);
   try {
-    const { id } = req.params
-    const { nombre, apellido, dni, fecha_nacimiento } = req.body
-
-    const persona = await Persona.findByPk(id, {
-      include: [{ model: Cargo, as: 'cargo' }],
-    })
-    if (!persona) {
-      return res.status(404).json({ error: 'Persona no encontrada' })
-    }
-
-    await persona.update({ nombre, apellido, dni, fecha_nacimiento })
-    res.status(200).json(persona)
+    const { id } = req.params;
+    const persona = await Persona.findByPk(id);
+    if (!persona) return sendNotFound(res, 'Persona no encontrada.');
+    
+    await persona.update(req.body);
+    const personaActualizadaConCargo = await Persona.findByPk(id, {
+      include: [{ model: Cargo, as: 'cargo' }]
+    });
+    return sendSuccess(res, personaActualizadaConCargo);
   } catch (error) {
-    res.status(400).json({ error: error.message })
+    next(error);
   }
-}
+};
 
-export const deletePerson = async (req, res) => {
+export const deletePerson = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return next(errors);
   try {
-    const { id } = req.params
-    const persona = await Persona.findByPk(id)
-    if (!persona) {
-      return res.status(404).json({ error: 'Persona no encontrada' })
-    }
-    await persona.destroy()
-    res.status(204).send()
+    const { id } = req.params;
+    const persona = await Persona.findByPk(id);
+    if (!persona) return sendNotFound(res, 'Persona no encontrada.');
+    await persona.destroy();
+    return sendNoContent(res);
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    next(error);
   }
-}
+};
 
-export const getPersonByDni = async (req, res) => {
-  try {
-    const { dni } = req.params
-    const persona = await Persona.findOne({
-      where: { dni },
-      include: [{ model: Cargo, as: 'cargo' }],
-    })
-    if (!persona) {
-      return res.status(404).json({ error: 'Persona no encontrada' })
+// Métodos de búsqueda específicos (pueden ser redundantes si getAllPersons es flexible)
+const getPersonByCustomFilter = async (req, res, next, filterField, filterParam) => {
+    try {
+        const whereClause = {};
+        if (filterField === 'fecha_nac') {
+            whereClause[filterField] = sequelizeWhere(fn('DATE', col(filterField)), '=', filterParam);
+        } else if (filterField === 'edad') {
+            whereClause[literal(`TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE())`)] = filterParam;
+        } else {
+            whereClause[filterField] = (filterField === 'nombre' || filterField === 'apellido') 
+                ? { [Op.like]: `%${filterParam}%` } 
+                : filterParam;
+        }
+        const personas = await Persona.findAll({
+            where: whereClause,
+            include: [{ model: Cargo, as: 'cargo' }]
+        });
+        if (personas.length === 0) return sendNotFound(res, `No se encontraron personas.`);
+        return sendSuccess(res, personas);
+    } catch (error) {
+        next(error);
     }
-    res.status(200).json(persona)
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-}
-
-export const getPersonByName = async (req, res) => {
-  try {
-    const { nombre } = req.params
-    const personas = await Persona.findAll(
-      { where: { nombre } },
-      {
-        include: [{ model: Cargo, as: 'cargo' }],
-      }
-    )
-    if (personas.length === 0) {
-      return res.status(404).json({ error: 'Persona no encontrada' })
-    }
-    res.status(200).json(personas)
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-}
-
-export const getPersonByLastName = async (req, res) => {
-  try {
-    const { apellido } = req.params
-    const personas = await Persona.findAll(
-      { where: { apellido } },
-      {
-        include: [{ model: Cargo, as: 'cargo' }],
-      }
-    )
-    if (personas.length === 0) {
-      return res.status(404).json({ error: 'Persona no encontrada' })
-    }
-    res.status(200).json(personas)
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-}
-
-export const getPersonByBirthdate = async (req, res) => {
-  try {
-    const { fecha_nac } = req.params
-    const personas = await Persona.findAll({
-      where: sequelize.where(
-        sequelize.fn('DATE', sequelize.col('fecha_nac')),
-        fecha_nac
-      ),
-      include: [{ model: Cargo, as: 'cargo' }],
-    })
-    if (personas.length === 0) {
-      return res.status(404).json({ error: 'Persona no encontrada' })
-    }
-    res.status(200).json(personas)
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-}
-
-export const getPersonByAge = async (req, res) => {
-  try {
-    const { edad } = req.params
-    const personas = await Persona.findAll({
-      where: sequelize.where(
-        sequelize.literal('TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE())'),
-        edad
-      ),
-      include: [{ model: Cargo, as: 'cargo' }],
-    })
-    if (personas.length === 0) {
-      return res.status(404).json({ error: 'Persona no encontrada' })
-    }
-    res.status(200).json(personas)
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-}
-
-export const getPersonByEmail = async (req, res) => {
-  try {
-    const { email } = req.params
-    const personas = await Persona.findAll(
-      { where: { email } },
-      {
-        include: [{ model: Cargo, as: 'cargo' }],
-      }
-    )
-    if (personas.length === 0) {
-      return res.status(404).json({ error: 'Persona no encontrada' })
-    }
-    res.status(200).json(personas)
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-}
-
-// Filtrar por cargo
-export const getPersonsByCargo = async (req, res) => {
-  try {
-    const { cargo_id } = req.params
-    const personas = await Persona.findAll({
-      where: { cargo_id },
-      include: [{ model: Cargo, as: 'cargo' }],
-    })
-    if (personas.length === 0) {
-      return res
-        .status(404)
-        .json({ error: 'No se encontraron personas con el cargo especificado' })
-    }
-    res.status(200).json(personas)
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-}
-
-// Filtrar por tipo de cargo
-export const getPersonsByCargoType = async (req, res) => {
-  try {
-    const { tipo } = req.params
-    const personas = await Persona.findAll({
-      include: [
-        {
-          model: Cargo,
-          as: 'cargo',
-          where: { tipo },
-        },
-      ],
-    })
-    if (personas.length === 0) {
-      return res.status(404).json({
-        error: 'No se encontraron personas con el tipo de cargo especificado',
-      })
-    }
-    res.status(200).json(personas)
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-}
-
-// Filtrar por cargo y tipo
-export const getPersonsByCargoAndType = async (req, res) => {
-  try {
-    const { cargo_id, tipo } = req.params
-    const personas = await Persona.findAll({
-      where: { cargo_id },
-      include: [
-        {
-          model: Cargo,
-          as: 'cargo',
-          where: { tipo },
-        },
-      ],
-    })
-    if (personas.length === 0) {
-      return res
-        .status(404)
-        .json({
-          error: 'No se encontraron personas con el cargo y tipo especificados',
-        })
-    }
-    res.status(200).json(personas)
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-}
+};
+export const getPersonByDni = async (req, res, next) => getPersonByCustomFilter(req, res, next, 'dni', req.params.dni);
+export const getPersonByName = async (req, res, next) => getPersonByCustomFilter(req, res, next, 'nombre', req.params.nombre);
+export const getPersonByLastName = async (req, res, next) => getPersonByCustomFilter(req, res, next, 'apellido', req.params.apellido);
+export const getPersonByBirthdate = async (req, res, next) => getPersonByCustomFilter(req, res, next, 'fecha_nac', req.params.fecha_nac);
+export const getPersonByAge = async (req, res, next) => getPersonByCustomFilter(req, res, next, 'edad', req.params.edad);
+export const getPersonByEmail = async (req, res, next) => getPersonByCustomFilter(req, res, next, 'email', req.params.email);

@@ -1,0 +1,42 @@
+### Registrar usuario
+POST http://localhost:3000/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "nombre": "Juan",
+  "apellido": "Pérez",
+  "username": "juanperez",
+  "email": "juan.perez@example.com",
+  "password": "jmro1975"
+}
+
+### Login
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "juan.perez@example.com",
+  "password": "tu_password"
+}
+
+### Obtener perfil del usuario autenticado
+GET http://localhost:3000/api/v1/auth/profile
+Authorization: Bearer {{token}}
+
+### Actualizar perfil del usuario autenticado
+PUT http://localhost:3000/api/v1/auth/profile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Juan Actualizado",
+  "apellido": "Pérez"
+}
+
+### Logout
+POST http://localhost:3000/api/v1/auth/logout
+Authorization: Bearer {{token}}
+
+### Listar todos los usuarios (solo admin)
+GET http://localhost:3000/api/v1/auth/users
+Authorization: Bearer {{token}}

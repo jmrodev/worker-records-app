@@ -1,13 +1,22 @@
+### Login  
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "tu_usuario",
+  "password": "tu_password"
+}
+
 ### GET todas las personas
-GET http://localhost:3000/personRouter
+GET http://localhost:3000/api/v1/persons
 Content-Type: application/json
 
 ### GET una persona por ID
-GET http://localhost:3000/personRouter/cf4f1686-2a96-4730-8fae-6be3e524420f
+GET http://localhost:3000/api/v1/persons/cf4f1686-2a96-4730-8fae-6be3e524420f
 Content-Type: application/json
 
 ### POST crear una nueva persona
-POST http://localhost:3000/personRouter/
+POST http://localhost:3000/api/v1/persons
 Content-Type: application/json
 
 {
@@ -23,37 +32,37 @@ Content-Type: application/json
 }
 
 ### GET personas por nombre
-GET http://localhost:3000/personRouter/nombre/Juan
+GET http://localhost:3000/api/v1/persons/nombre/Juan
 Content-Type: application/json
 
 ### GET personas por apellido
-GET http://localhost:3000/personRouter/apellido/Pérez
+GET http://localhost:3000/api/v1/persons/apellido/Pérez
 Content-Type: application/json
 
 ### GET personas por edad
-GET http://localhost:3000/personRouter/edad/35
+GET http://localhost:3000/api/v1/persons/edad/35
 Content-Type: application/json
 
 ### GET personas por fecha de nacimiento
-GET http://localhost:3000/personRouter/fecha-nacimiento/1990-01-01
+GET http://localhost:3000/api/v1/persons/fecha-nacimiento/1990-01-01
 Content-Type: application/json
 
 ### GET personas por DNI
-GET http://localhost:3000/personRouter/dni/12345679
+GET http://localhost:3000/api/v1/persons/dni/12345679
 Content-Type: application/json
 
 ### GET personas por email
-GET http://localhost:3000/personRouter/email/juan.perez@example.com
+GET http://localhost:3000/api/v1/persons/email/juan.perez@example.com
 Content-Type: application/json
 
 ### GET personas por cargo
-GET http://localhost:3000/personRouter/cargo/20
+GET http://localhost:3000/api/v1/persons/cargo/20
 Content-Type: application/json
 
 ### GET personas por tipo de cargo
-GET http://localhost:3000/personRouter/tipo/Test
+GET http://localhost:3000/api/v1/persons/tipo/Test
 Content-Type: application/json
 
 ### GET personas por cargo y tipo
-GET http://localhost:3000/personRouter/cargo/52/tipo/Test
+GET http://localhost:3000/api/v1/persons/cargo/52/tipo/Test
 Content-Type: application/json

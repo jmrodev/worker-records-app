@@ -1,0 +1,20 @@
+// .eslintrc.json
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:prettier/recommended" // Asegura que Prettier y ESLint jueguen bien
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "prettier/prettier": "warn", // Muestra los errores de Prettier como warnings
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }] // No fallar por 'next' no usado en middlewares
+  }
+}
